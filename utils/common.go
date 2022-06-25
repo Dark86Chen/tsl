@@ -1,27 +1,26 @@
 package utils
 
 import (
+	"bytes"
+	"crypto/md5"
+	"encoding/binary"
+	"encoding/hex"
+	"fmt"
+	"github.com/Dark86Chen/tsl/utils/EAS"
 	"github.com/satori/go.uuid"
+	"log"
+	"math/rand"
 	"strconv"
 	"strings"
 	"time"
-	"github.com/Dark86Chen/tsl/utils/EAS"
-	"log"
-	"fmt"
-	"math/rand"
-	"bytes"
-	"encoding/binary"
-	"crypto/md5"
-	"encoding/hex"
 )
 
 // 时间转换 设置时区 东巴区
 var cstZone = time.FixedZone("CST", 8*3600)
 
-func init()  {
+func init() {
 	time.Local = cstZone
 }
-
 
 // 获取当前时间戳到秒
 func GetNowTimeStamp() int {
@@ -33,18 +32,18 @@ func GetNowTimeStamp() int {
 }
 
 // 获取当前日期格式
-func GetNowTimeDate() string{
+func GetNowTimeDate() string {
 	t := time.Now().In(cstZone)
 	return t.Format("2006-01-02 15:04:05")
 }
 
-func GetNowTimeDateByFormat(format string) string{
+func GetNowTimeDateByFormat(format string) string {
 	t := time.Now().In(cstZone)
 	return t.Format(format)
 }
 
 func GetTimeStampByDate(date string) int64 {
-	t,err := time.ParseInLocation("2006-01-02 15:04:05", date, cstZone)
+	t, err := time.ParseInLocation("2006-01-02 15:04:05", date, cstZone)
 	if err != nil {
 		return 0
 	}
@@ -52,7 +51,7 @@ func GetTimeStampByDate(date string) int64 {
 }
 
 func GetTimeStampByDateAndFormatStr(date string, formatStr string) int64 {
-	t,err := time.ParseInLocation(formatStr, date, cstZone)
+	t, err := time.ParseInLocation(formatStr, date, cstZone)
 	if err != nil {
 		return 0
 	}
@@ -78,9 +77,9 @@ func GetNowMinutTimeStamp() int64 {
 }
 
 // 时间戳转换日期
-func GetDateByTimeStamp(timeStamp int64) (date string, err error){
+func GetDateByTimeStamp(timeStamp int64) (date string, err error) {
 	secondTimeStamp := strconv.FormatInt(timeStamp, 10)
-	i, err := strconv.ParseInt(secondTimeStamp[:10],10, 64)
+	i, err := strconv.ParseInt(secondTimeStamp[:10], 10, 64)
 	if err != nil {
 		return date, err
 	}
@@ -90,7 +89,7 @@ func GetDateByTimeStamp(timeStamp int64) (date string, err error){
 
 // 生成uuid
 func GetUuid() string {
-	u,_ := uuid.NewV1()
+	u := uuid.NewV1()
 	uid := u.String()
 	return strings.Replace(uid, "-", "", -1)
 }
@@ -127,9 +126,9 @@ func DecHex(n int64) string {
 	return s
 }
 
-func GetDateFormat(timeStamp int64,formatString string) (date string, err error) {
+func GetDateFormat(timeStamp int64, formatString string) (date string, err error) {
 	secondTimeStamp := strconv.FormatInt(timeStamp, 10)
-	i, err := strconv.ParseInt(secondTimeStamp[:10],10, 64)
+	i, err := strconv.ParseInt(secondTimeStamp[:10], 10, 64)
 	if err != nil {
 		return date, err
 	}
@@ -153,9 +152,9 @@ func GetRandCode(codeLen int) (code string) {
 }
 
 func GenerateKey() uint64 {
-	u2,_ := uuid.NewV1()
+	u2 := uuid.NewV1()
 	b := u2.Bytes()
-	buf  :=  bytes .NewBuffer(b)
+	buf := bytes.NewBuffer(b)
 
 	var x uint64
 

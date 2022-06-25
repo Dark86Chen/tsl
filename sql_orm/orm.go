@@ -1,15 +1,15 @@
 package sql_orm
 
 import (
-	"xorm.io/xorm"
-	"time"
+	"fmt"
 	"github.com/Dark86Chen/tsl/log"
 	_ "github.com/go-sql-driver/mysql"
-	"fmt"
 	"github.com/pkg/errors"
+	"time"
+	"xorm.io/xorm"
 )
 
-func (e Engine)GetOrmEngine() (engine *xorm.Engine, err error) {
+func (e Engine) GetOrmEngine() (engine *xorm.Engine, err error) {
 	if EngineCon.Engine != nil {
 		if err := EngineCon.Engine.Ping(); err != nil {
 			// 关闭原来的链接
@@ -37,8 +37,7 @@ func (e Engine)GetOrmEngine() (engine *xorm.Engine, err error) {
 	return EngineCon.Engine, nil
 }
 
-
-func (e *Engine)createEngine() (engine *xorm.Engine, err error) {
+func (e *Engine) createEngine() (engine *xorm.Engine, err error) {
 	engine, err = xorm.NewEngine(DriverName, DataSourceName)
 	if err != nil {
 		return nil, err
@@ -54,7 +53,7 @@ func (e *Engine)createEngine() (engine *xorm.Engine, err error) {
 		pingState <- true
 	}()
 
-	t := time.AfterFunc(5 * time.Second, func() {
+	t := time.AfterFunc(5*time.Second, func() {
 		pingState <- false
 	})
 
@@ -68,7 +67,7 @@ func (e *Engine)createEngine() (engine *xorm.Engine, err error) {
 		}
 	}
 
-	END:
+END:
 
 	engine.ShowSQL(true)
 	//engine.SetMaxOpenConns(1000)
@@ -92,8 +91,7 @@ func (e *Engine)createEngine() (engine *xorm.Engine, err error) {
 	return engine, nil
 }
 
-
-func (s *ShortEngine)GetShortEngine() (engine *xorm.Engine, err error) {
+func (s *ShortEngine) GetShortEngine() (engine *xorm.Engine, err error) {
 	ShortDataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&loc=%s",
 		s.User, s.Pwd, s.Host,
 		s.Port, s.DbName, s.Charset, "Asia%2FShanghai")
@@ -112,27 +110,27 @@ func (s *ShortEngine)GetShortEngine() (engine *xorm.Engine, err error) {
 		pingState <- true
 	}()
 
-	t := time.AfterFunc(5 * time.Second, func() {
+	t := time.AfterFunc(5*time.Second, func() {
 		pingState <- false
 	})
 
 	select {
-		case state := <-pingState:
-			if state == false {
-				return nil, errors.New("connection db error")
-			} else {
-				t.Stop()
-				goto END
-			}
+	case state := <-pingState:
+		if state == false {
+			return nil, errors.New("connection db error")
+		} else {
+			t.Stop()
+			goto END
+		}
 	}
 
-	END:
+END:
 	engine.ShowSQL(true)
 	// 设置时区
 	engine.DatabaseTZ = cstZone // 必须
 	engine.TZLocation = cstZone // 必须
 
-	engine.TZLocation,_ = time.LoadLocation("Asia/Shanghai")
+	engine.TZLocation, _ = time.LoadLocation("Asia/Shanghai")
 	engine.SetTZLocation(engine.TZLocation)
 	if err != nil {
 		log.Logger.Warning("set orm engine location err --> ", err.Error())
