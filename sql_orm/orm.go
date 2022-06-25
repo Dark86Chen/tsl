@@ -1,7 +1,7 @@
 package sql_orm
 
 import (
-	"github.com/go-xorm/xorm"
+	"xorm.io/xorm"
 	"time"
 	"github.com/Dark86Chen/tsl/log"
 	_ "github.com/go-sql-driver/mysql"

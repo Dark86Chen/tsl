@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"github.com/go-xorm/xorm"
+	"xorm.io/xorm"
 	"time"
 )
 
