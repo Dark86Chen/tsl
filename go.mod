@@ -17,7 +17,7 @@ require (
 	github.com/surgemq/message v0.0.0-20151017233315-2b7ca1ac6121
 	github.com/ugorji/go/codec v1.1.7
 	go.mongodb.org/mongo-driver v1.9.1
-	golang.org/x/crypto v0.0.0-20201216223049-8b5274cf687f
+	golang.org/x/crypto v0.1.0
 	gopkg.in/go-playground/assert.v1 v1.2.1
 	gopkg.in/go-playground/validator.v8 v8.18.2
 	gopkg.in/yaml.v2 v2.2.7
